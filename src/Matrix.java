@@ -49,6 +49,14 @@ public class Matrix {
             }
         } while (i < row * col / 2);
     }
+
+    public PointLine checkTwoPoint(Point p1, Point p2) {
+        if (!p1.equals(p2) && matrix[p1.x][p1.y] == matrix[p2.x][p2.y]) {
+            return new PointLine(p1, p2);
+        }
+        return null;
+    }
+
     public int getRow() {
         return row;
     }
