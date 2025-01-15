@@ -10,6 +10,7 @@ public class Main {
         window.setResizable(false);
         window.setTitle("PikachuGame");
 
+
         GamePanel gamePanel = new GamePanel();
 
         window.add(gamePanel);

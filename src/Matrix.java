@@ -33,9 +33,9 @@ public class Matrix {
         }
 
         Random rand = new Random();
-        int imgCount = 21; // số ảnh trong thư mục res
+        int imgCount = 20; //
         int max = 10;       // số lần icon xuất hiện tối đa
-        int[] arr = new int[imgCount + 1];
+        int[] arr = new int[imgCount + 1]; //from arr[0] to arr[20]
 
         ArrayList<Point> listPoint = new ArrayList<>();
 
@@ -47,7 +47,7 @@ public class Matrix {
 
         int i = 0;
         while (!listPoint.isEmpty() && i < (row-2) * (col-2) / 2) {
-            int index = rand.nextInt(imgCount) + 1;
+            int index = rand.nextInt(imgCount) + 1; //from 1 to 20
             if (arr[index] < max) {
                 arr[index] += 2;
                 for (int j = 0; j < 2 && !listPoint.isEmpty(); j++) {
@@ -190,7 +190,6 @@ public class Matrix {
 
     private boolean checkRectX(Point p1, Point p2) {
         System.out.println("check rect x");
-        // find point have y min and max
         Point pMinY = p1, pMaxY = p2;
         if (p1.y > p2.y) {
             pMinY = p2;
@@ -205,11 +204,8 @@ public class Matrix {
                     && checkLineY(pMinY.x, pMaxY.x, y)
                     && checkLineX(y, pMaxY.y, pMaxY.x)) {
 
-                System.out.println("Rect x");
-                System.out.println("(" + pMinY.x + "," + pMinY.y + ") -> ("
-                        + pMinY.x + "," + y + ") -> (" + pMaxY.x + "," + y
-                        + ") -> (" + pMaxY.x + "," + pMaxY.y + ")");
-                // if three line is true return column y
+
+
                 paths.add(pMinY);
                 paths.add(new Point(pMinY.x, y));
                 paths.add(new Point(pMaxY.x, y));
@@ -238,10 +234,7 @@ public class Matrix {
                     && checkLineX(pMinX.y, pMaxX.y, x)
                     && checkLineY(x, pMaxX.x, pMaxX.y)) {
 
-                System.out.println("Rect y");
-                System.out.println("(" + pMinX.x + "," + pMinX.y + ") -> (" + x
-                        + "," + pMinX.y + ") -> (" + x + "," + pMaxX.y
-                        + ") -> (" + pMaxX.x + "," + pMaxX.y + ")");
+
                 paths.add(pMinX);
                 paths.add(new Point(x, pMinX.y));
                 paths.add(new Point(x, pMaxX.y));
@@ -256,7 +249,7 @@ public class Matrix {
     //Xet theo chieu ngang
     //type = -1 la di sang trai type=1 la di sang phai
     private boolean checkMoreLineX(Point p1, Point p2, int type) {
-        System.out.println("check chec more x");
+
         // find point have y min
         Point pMinY = p1, pMaxY = p2;
         if (p1.y > p2.y) {
@@ -271,7 +264,6 @@ public class Matrix {
             colFinish = pMinY.y;
             y = pMinY.y + type;
             row = pMaxY.x;
-            System.out.println("colFinish = " + colFinish);
         }
 
         // find column finish of line
@@ -281,12 +273,6 @@ public class Matrix {
             while (matrix[pMinY.x][y] == 0
                     && matrix[pMaxY.x][y] == 0) {
                 if (checkLineY(pMinY.x, pMaxY.x, y)) {
-
-                    System.out.println("TH X " + type);
-                    System.out.println("(" + pMinY.x + "," + pMinY.y + ") -> ("
-                            + pMinY.x + "," + y + ") -> (" + pMaxY.x + "," + y
-                            + ") -> (" + pMaxY.x + "," + pMaxY.y + ")");
-
                     paths.add(pMinY);
                     paths.add(new Point(pMinY.x, y));
                     paths.add(new Point(pMaxY.x, y));
@@ -301,7 +287,6 @@ public class Matrix {
 
     // Xet mo rong theo chieu doc type = 1 ( di len tren) type = -1 (di xuong duoi)
     private boolean checkMoreLineY(Point p1, Point p2, int type) {
-        System.out.println("check more y");
         Point pMinX = p1, pMaxX = p2;
         if (p1.x > p2.x) {
             pMinX = p2;
@@ -320,11 +305,6 @@ public class Matrix {
             while (matrix[x][pMinX.y] == 0
                     && matrix[x][pMaxX.y] == 0) {
                 if (checkLineX(pMinX.y, pMaxX.y, x)) {
-                    System.out.println("TH Y " + type);
-                    System.out.println("(" + pMinX.x + "," + pMinX.y + ") -> ("
-                            + x + "," + pMinX.y + ") -> (" + x + "," + pMaxX.y
-                            + ") -> (" + pMaxX.x + "," + pMaxX.y + ")");
-
                     paths.add(pMinX);
                     paths.add(new Point(x, pMinX.y));
                     paths.add(new Point(x, pMaxX.y));

@@ -13,8 +13,8 @@ import javax.swing.border.LineBorder;
 public class GamePanel extends JPanel implements ActionListener {
     public static int width = 1080;
     public static int height = 720;
-    static int rows = 6 + 2;
-    static int cols = 6 + 2;
+    static int rows = 3 + 2;
+    static int cols = 4 + 2;
     private int bound = 2; // Padding between buttons
     private int button_width = 44;
     private int button_height = 54;// Size of each button
@@ -26,7 +26,7 @@ public class GamePanel extends JPanel implements ActionListener {
     private PointLine line;
     private int score = 0;
     private int item;
-    private int MAX_TIME = 15;
+    private int MAX_TIME = 150;
     public int time = MAX_TIME;
     public JLabel lbScore;
     private JProgressBar progressTime;
@@ -37,7 +37,7 @@ public class GamePanel extends JPanel implements ActionListener {
     private int gameState = 1;// Trạng thái game: 1 = play, 2 = pause
     private int level = 1;
     private int switchCount = 10;
-    public Sound clickSound, gameOverSound, winSound, killSound, completeLevelSound;
+    public Sound clickSound, gameOverSound, winSound, killSound, completeLevelSound, coupleSound;
     private LinePanel linePanel;
     private JLayeredPane layeredPane;
 
@@ -55,12 +55,12 @@ public class GamePanel extends JPanel implements ActionListener {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        clickSound = new Sound("res/sound/clickedit.wav");
+        clickSound = new Sound("res/sound/click.wav");
         gameOverSound = new Sound("res/sound/gameover.wav");
         winSound = new Sound("res/sound/winning.wav");
         killSound = new Sound("res/sound/delete.wav");
         completeLevelSound = new Sound("res/sound/switch.wav");
-        initializeGame();
+        coupleSound = new Sound("res/sound/couple.wav");
 
         layeredPane = new JLayeredPane();
         layeredPane.setBounds(0, 0, width, height);
@@ -69,6 +69,8 @@ public class GamePanel extends JPanel implements ActionListener {
         linePanel = new LinePanel();
         linePanel.setBounds(0, 0, width, height);
         layeredPane.add(linePanel, JLayeredPane.PALETTE_LAYER);
+
+        initializeGame();
 
     }
 
@@ -103,7 +105,8 @@ public class GamePanel extends JPanel implements ActionListener {
         progressTime.setStringPainted(true);
         progressTime.setForeground(Color.GREEN);
         progressTime.setBounds(220, 40, 640, 30);
-        this.add(progressTime);
+        //this.add(progressTime);
+        layeredPane.add(progressTime, JLayeredPane.DEFAULT_LAYER);
     }
 
     private void addPauseButton() {
@@ -115,7 +118,9 @@ public class GamePanel extends JPanel implements ActionListener {
         pauseButton.setIcon(new ImageIcon(img.getScaledInstance(58, 66, Image.SCALE_SMOOTH)));
         pauseButton.setBounds(20, 20, 58, 66); // Vị trí và kích thước nút
         pauseButton.addActionListener(e -> togglePause()); // Gắn sự kiện khi ấn nút
-        this.add(pauseButton);
+        //this.add(pauseButton);
+        layeredPane.add(pauseButton, JLayeredPane.DRAG_LAYER);
+
     }
 
     private void addSwitchButton() {
@@ -159,19 +164,19 @@ public class GamePanel extends JPanel implements ActionListener {
         progressTime.setEnabled(enabled); // Bật/tắt thanh tiến trình
     }
 
+
     private void showPauseScreen() {
         pauseOverlay = new JLabel(new ImageIcon(pauseImage));
         pauseOverlay.setBounds(0, 0, width, height); // Hiển thị toàn màn hình
-        this.add(pauseOverlay);
-        this.setComponentZOrder(pauseOverlay, 0);
-        this.repaint(); // Vẽ lại giao diện
+        layeredPane.add(pauseOverlay, JLayeredPane.PALETTE_LAYER);
+        layeredPane.repaint(); // Vẽ lại giao diện
     }
 
     private void removePauseScreen() {
         if (pauseOverlay != null) {
-            this.remove(pauseOverlay);
+            layeredPane.remove(pauseOverlay);
             pauseOverlay = null;
-            this.repaint(); // Vẽ lại giao diện
+            layeredPane.repaint();   // Vẽ lại giao diện
         }
     }
 
@@ -292,6 +297,7 @@ public class GamePanel extends JPanel implements ActionListener {
                 ImageIcon icon = getIcon(maTran.getMatrix()[i][j]);
                 buttons[i][j].setIcon(icon);
                 add(buttons[i][j]);
+                layeredPane.add(buttons[i][j], JLayeredPane.DEFAULT_LAYER);
             }
         }
     }
@@ -325,8 +331,8 @@ public class GamePanel extends JPanel implements ActionListener {
         String btnIndex = e.getActionCommand();
         int indexDot = btnIndex.lastIndexOf(",");
         int x = Integer.parseInt(btnIndex.substring(0, indexDot));
-        int y = Integer.parseInt(btnIndex.substring(indexDot + 1,
-                btnIndex.length()));
+        int y = Integer.parseInt(btnIndex.substring(indexDot + 1
+        ));
         if (p1 == null) {
             p1 = new Point(x, y);
             buttons[p1.x][p1.y].setBorder(new LineBorder(Color.red));
@@ -337,6 +343,7 @@ public class GamePanel extends JPanel implements ActionListener {
             line = maTran.checkTwoPoint(p1, p2);
             ArrayList<Point> paths = maTran.getPaths();
             if (line != null) {
+                coupleSound.playSoundEffect();
                 System.out.println("line != null");
                 maTran.getMatrix()[p1.x][p1.y] = 0;
                 maTran.getMatrix()[p2.x][p2.y] = 0;
@@ -344,7 +351,7 @@ public class GamePanel extends JPanel implements ActionListener {
 
                 linePanel.setPoints(paths);
 
-                Timer timer = new Timer(300, new ActionListener() {
+                Timer timer = new Timer(200, new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent evt) {
                         linePanel.clearPoints();
