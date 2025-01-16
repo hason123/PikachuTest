@@ -36,7 +36,7 @@ public class GamePanel extends JPanel implements ActionListener {
     private JLabel pauseOverlay;
     private int gameState = 1;// Trạng thái game: 1 = play, 2 = pause
     private int level = 1;
-    private int switchCount = 10;
+    private int switchCount = 20;
     public Sound clickSound, gameOverSound, winSound, killSound, completeLevelSound, coupleSound;
     private LinePanel linePanel;
     private JLayeredPane layeredPane;
@@ -127,7 +127,7 @@ public class GamePanel extends JPanel implements ActionListener {
         switchButton = new JButton();
         switchButton.setContentAreaFilled(false);
         switchButton.setBorderPainted(false);
-        pauseButton.setFocusable(false);
+        switchButton.setFocusable(false);
         Image img1 = new ImageIcon(getClass().getResource("/res/img/shuffle.png")).getImage();
         switchButton.setIcon(new ImageIcon(img1.getScaledInstance(64, 64, Image.SCALE_SMOOTH)));
         switchButton.setBounds(990, 20, 64, 64); // Vị trí và kích thước nút
@@ -209,7 +209,7 @@ public class GamePanel extends JPanel implements ActionListener {
     private void resetGame() {
         time = MAX_TIME; // Đặt lại thời gian
         score = 0; // Đặt lại điểm số
-        switchCount = 10;
+        switchCount = 20;
         item = (rows-2) * (cols-2) / 2; // Đặt lại số lượng item
         maTran = new Matrix(rows, cols); // Khởi tạo lại ma trận
         progressTime.setValue(MAX_TIME); // Đặt lại giá trị thanh tiến trình
@@ -236,7 +236,7 @@ public class GamePanel extends JPanel implements ActionListener {
         maTran = new Matrix(rows, cols); // Tạo ma trận mới
         progressTime.setValue(MAX_TIME); // Đặt lại giá trị thanh tiến trình
         progressTime.setForeground(Color.GREEN); // Đặt lại màu thanh tiến trình
-        switchCount = 10;
+        switchCount = 20;
         // Cập nhật các nút
         for (int i = 1; i < rows - 1; i++) {
             for (int j = 1; j < cols - 1; j++) {
@@ -351,12 +351,9 @@ public class GamePanel extends JPanel implements ActionListener {
 
                 linePanel.setPoints(paths);
 
-                Timer timer = new Timer(200, new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent evt) {
-                        linePanel.clearPoints();
-                        ((Timer) evt.getSource()).stop();
-                    }
+                Timer timer = new Timer(200, evt -> {
+                    linePanel.clearPoints();
+                    ((Timer) evt.getSource()).stop();
                 });
                 timer.start();
 

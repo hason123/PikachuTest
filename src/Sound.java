@@ -51,6 +51,7 @@ public class Sound {
         start();
         loop();
     }
+
     public void stopMusic(){
         stop();
     }

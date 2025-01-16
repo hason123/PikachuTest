@@ -69,7 +69,8 @@ public class Matrix {
             // Duyệt qua hàng hiện tại
             for (int j = 1; j < col - 1; j++) {
                 if (matrix[i][j] != 0) {
-                    newRow[index++] = matrix[i][j]; // Gán giá trị không phải 0 vào vị trí mới
+                    newRow[index] = matrix[i][j];
+                    index++;// Gán giá trị không phải 0 vào vị trí mới
                 }
             }
 
@@ -88,7 +89,8 @@ public class Matrix {
             // Duyệt qua các hàng trong cột
             for (int i = row - 2; i >= 1; i--) {
                 if (matrix[i][j] != 0) {
-                    newCol[index--] = matrix[i][j]; // Gán giá trị không phải 0 vào vị trí mới trong cột
+                    newCol[index] = matrix[i][j];
+                    index--;// Gán giá trị không phải 0 vào vị trí mới trong cột
                 }
             }
 
@@ -199,13 +201,10 @@ public class Matrix {
             if (y > pMinY.y && matrix[pMinY.x][y] != 0) {
                 return false;
             }
-            // check two line
-            if ((matrix[pMaxY.x][y] == 0)
+            // check two or three line
+            if ((matrix[pMaxY.x][y] == 0 || matrix[pMaxY.x][y] == matrix[pMaxY.x][pMaxY.y])
                     && checkLineY(pMinY.x, pMaxY.x, y)
                     && checkLineX(y, pMaxY.y, pMaxY.x)) {
-
-
-
                 paths.add(pMinY);
                 paths.add(new Point(pMinY.x, y));
                 paths.add(new Point(pMaxY.x, y));
@@ -230,7 +229,7 @@ public class Matrix {
             if (x > pMinX.x && matrix[x][pMinX.y] != 0) {
                 return false;
             }
-            if ((matrix[x][pMaxX.y] == 0)
+            if ((matrix[x][pMaxX.y] == 0 || matrix[x][pMaxX.y] == matrix[pMaxX.x][pMaxX.y])
                     && checkLineX(pMinX.y, pMaxX.y, x)
                     && checkLineY(x, pMaxX.x, pMaxX.y)) {
 
@@ -322,7 +321,6 @@ public class Matrix {
         if (!p1.equals(p2) && matrix[p1.x][p1.y] == matrix[p2.x][p2.y]) {
             // check line with x
             if (p1.x == p2.x) {
-                paths.clear();
                 if (checkLineX(p1.y, p2.y, p1.x)) {
                     paths.add(p1);
                     paths.add(p2);
@@ -331,7 +329,7 @@ public class Matrix {
             }
             // check line with y
             if (p1.y == p2.y) {
-                paths.clear();
+                //paths.clear();
                 if (checkLineY(p1.x, p2.x, p1.y)) {
                     paths.add(p1);
                     paths.add(p2);
@@ -339,39 +337,29 @@ public class Matrix {
                 }
             }
             // check in rectangle with x
-            paths.clear();
             if ( checkRectX(p1, p2)) {
-
                 return new PointLine(p1, p2);
             }
             // check in rectangle with y
-            paths.clear();
             if (checkRectY(p1, p2)) {
-
                 return new PointLine(p1, p2);
             }
             // check more right
-            paths.clear();
             if (checkMoreLineX(p1, p2, 1)) {
-
                 return new PointLine(p1, p2);
             }
             // check more left
-            paths.clear();
             if (checkMoreLineX(p1, p2, -1)) {
-
                 return new PointLine(p1, p2);
             }
             // check more down
-            paths.clear();
+            //paths.clear();
             if (checkMoreLineY(p1, p2, 1)) {
-
                 return new PointLine(p1, p2);
             }
             // check more up
-            paths.clear();
+            //paths.clear();
             if (checkMoreLineY(p1, p2, -1)) {
-
                 return new PointLine(p1, p2);
             }
         }
