@@ -33,8 +33,8 @@ public class Matrix {
         }
 
         Random rand = new Random();
-        int imgCount = 20; //
-        int max = 10;       // số lần icon xuất hiện tối đa
+        int imgCount = 10; //
+        int max = 20;       // số lần icon xuất hiện tối đa
         int[] arr = new int[imgCount + 1]; //from arr[0] to arr[20]
 
         ArrayList<Point> listPoint = new ArrayList<>();
@@ -46,11 +46,11 @@ public class Matrix {
         }
 
         int i = 0;
-        while (!listPoint.isEmpty() && i < (row-2) * (col-2) / 2) {
+        while ( i < (row-2) * (col-2) / 2) {
             int index = rand.nextInt(imgCount) + 1; //from 1 to 20
             if (arr[index] < max) {
                 arr[index] += 2;
-                for (int j = 0; j < 2 && !listPoint.isEmpty(); j++) {
+                for (int j = 0; j < 2 ; j++) {
                     int size = listPoint.size();
                     int pointIndex = rand.nextInt(size);
                     Point point = listPoint.get(pointIndex);
@@ -65,7 +65,6 @@ public class Matrix {
         for (int i = 1; i < row - 1; i++) { // Bỏ qua viền ngoài
             int[] newRow = new int[col];
             int index = 1; // Bắt đầu từ cột 1 (bỏ qua viền ngoài)
-
             // Duyệt qua hàng hiện tại
             for (int j = 1; j < col - 1; j++) {
                 if (matrix[i][j] != 0) {
@@ -73,10 +72,45 @@ public class Matrix {
                     index++;// Gán giá trị không phải 0 vào vị trí mới
                 }
             }
-
             // Cập nhật lại hàng trong ma trận
             for (int j = 1; j < col - 1; j++) {
                 matrix[i][j] = newRow[j];
+            }
+        }
+    }
+
+    public void shiftMatrix3() {
+        for (int i = 1; i < row - 1; i++) { // Bỏ qua viền ngoài
+            int[] newRow = new int[col];
+            int index = col - 2 ; // Bắt đầu từ cột 1 (bỏ qua viền ngoài)
+            // Duyệt qua hàng hiện tại
+            for (int j = col - 2; j >= 1; j--) {
+                if (matrix[i][j] != 0) {
+                    newRow[index] = matrix[i][j];
+                    index--;// Gán giá trị không phải 0 vào vị trí mới
+                }
+            }
+            // Cập nhật lại hàng trong ma trận
+            for (int j = 1; j < col - 1; j++) {
+                matrix[i][j] = newRow[j];
+            }
+        }
+    }
+
+    public void shiftMatrix4() {
+        for (int j = 1; j < col - 1; j++) { // Duyệt qua từng cột (bỏ qua viền ngoài)
+            int[] newCol = new int[row]; // Tạo một mảng mới cho cột
+            int index = 1; // Bắt đầu từ hàng cuối cùng (bỏ qua viền ngoài)
+            // Duyệt qua các hàng trong cột
+            for (int i = 1; i < row - 1 ; i++) {
+                if (matrix[i][j] != 0) {
+                    newCol[index] = matrix[i][j];
+                    index++;// Gán giá trị không phải 0 vào vị trí mới trong cột
+                }
+            }
+            // Cập nhật lại cột trong ma trận
+            for (int i = 1; i < row - 1; i++) {
+                matrix[i][j] = newCol[i];
             }
         }
     }
@@ -85,7 +119,6 @@ public class Matrix {
         for (int j = 1; j < col - 1; j++) { // Duyệt qua từng cột (bỏ qua viền ngoài)
             int[] newCol = new int[row]; // Tạo một mảng mới cho cột
             int index = row - 2; // Bắt đầu từ hàng cuối cùng (bỏ qua viền ngoài)
-
             // Duyệt qua các hàng trong cột
             for (int i = row - 2; i >= 1; i--) {
                 if (matrix[i][j] != 0) {
@@ -93,7 +126,6 @@ public class Matrix {
                     index--;// Gán giá trị không phải 0 vào vị trí mới trong cột
                 }
             }
-
             // Cập nhật lại cột trong ma trận
             for (int i = 1; i < row - 1; i++) {
                 matrix[i][j] = newCol[i];
@@ -118,7 +150,7 @@ public class Matrix {
 
         // Sau khi shuffle, tiến hành hoán đổi các vị trí trong ma trận
         for (int i = 0; i < nonZeroPoints.size(); i++) {
-            Point p1 = nonZeroPoints.get(i);
+            Point p1 = nonZeroPoints.get(i); //
             int value1 = matrix[p1.x][p1.y];
 
             // Chọn một vị trí khác ngẫu nhiên từ danh sách đã shuffle
@@ -232,7 +264,6 @@ public class Matrix {
             if ((matrix[x][pMaxX.y] == 0 || matrix[x][pMaxX.y] == matrix[pMaxX.x][pMaxX.y])
                     && checkLineX(pMinX.y, pMaxX.y, x)
                     && checkLineY(x, pMaxX.x, pMaxX.y)) {
-
 
                 paths.add(pMinX);
                 paths.add(new Point(x, pMinX.y));

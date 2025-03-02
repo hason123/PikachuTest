@@ -1,34 +1,29 @@
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 import java.awt.Point;
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
 
 public class GamePanel extends JPanel implements ActionListener {
     public static int width = 1080;
     public static int height = 720;
-    static int rows = 3 + 2;
-    static int cols = 4 + 2;
+    public static int rows = 8 + 2;
+    public static int cols = 8 + 2;
     private int bound = 2; // Padding between buttons
     private int button_width = 44;
     private int button_height = 54;// Size of each button
     private JButton[][] buttons;
     public Matrix maTran;
-
     private Point p1 = null;
     private Point p2 = null;
     private PointLine line;
     private int score = 0;
     private int item;
-    private int MAX_TIME = 150;
+    private int MAX_TIME = 300;
     public int time = MAX_TIME;
-    public JLabel lbScore;
     private JProgressBar progressTime;
     private Timer timer;
     private Image backgroundImage , pauseImage, pauseButtonImage, switchButtonImage;
@@ -37,7 +32,7 @@ public class GamePanel extends JPanel implements ActionListener {
     private int gameState = 1;// Trạng thái game: 1 = play, 2 = pause
     private int level = 1;
     private int switchCount = 20;
-    public Sound clickSound, gameOverSound, winSound, killSound, completeLevelSound, coupleSound;
+    public Sound clickSound, gameOverSound, winSound, completeLevelSound, coupleSound;
     private LinePanel linePanel;
     private JLayeredPane layeredPane;
 
@@ -58,7 +53,7 @@ public class GamePanel extends JPanel implements ActionListener {
         clickSound = new Sound("res/sound/click.wav");
         gameOverSound = new Sound("res/sound/gameover.wav");
         winSound = new Sound("res/sound/winning.wav");
-        killSound = new Sound("res/sound/delete.wav");
+        //killSound = new Sound("res/sound/delete.wav");
         completeLevelSound = new Sound("res/sound/switch.wav");
         coupleSound = new Sound("res/sound/couple.wav");
 
@@ -268,9 +263,9 @@ public class GamePanel extends JPanel implements ActionListener {
 
     private void setDisable(JButton btn) {
         btn.setIcon(null);
-        btn.setBackground(Color.black);
-        btn.setEnabled(false);
-        btn.setOpaque(false);
+       btn.setBackground(Color.black);
+       btn.setEnabled(false);
+       btn.setOpaque(false);
     }
 
     public ImageIcon getIcon(int index) {
@@ -317,8 +312,8 @@ public class GamePanel extends JPanel implements ActionListener {
                 } // Cập nhật icon tương ứng với giá trị trong ma trận
                 else {
                     buttons[i][j].setIcon(null);
-                    buttons[i][j].setEnabled(false);
-                    buttons[i][j].setOpaque(false);
+                   buttons[i][j].setEnabled(false);
+                   buttons[i][j].setOpaque(false);
                 }
             }
         }
@@ -359,10 +354,20 @@ public class GamePanel extends JPanel implements ActionListener {
 
                 execute(p1, p2);
                 if (level == 2) {
-                    maTran.shiftMatrix();
+                    maTran.shiftMatrix(); //left
+                    //maTran.shiftMatrix3();// right
                 }
                 if (level == 3) {
-                    maTran.shiftMatrix2();
+                   maTran.shiftMatrix2(); //down
+                   // maTran.shiftMatrix4(); //up
+                }
+                if (level == 4) {
+                    //maTran.shiftMatrix(); //left
+                    maTran.shiftMatrix3();// right
+                }
+                if (level == 5) {
+                    //maTran.shiftMatrix2(); //down
+                    maTran.shiftMatrix4(); //up
                 }
                 updateButtonIcons();
                 line = null;
@@ -377,7 +382,7 @@ public class GamePanel extends JPanel implements ActionListener {
             System.out.println("done");
             if (item == 0) {
                 score += time * 5;
-                if (level == 3) {
+                if (level == 5) {
                     timer.stop();
                     winSound.playSoundEffect();
                     int choice = JOptionPane.showConfirmDialog(null, "Congratulations! You have beaten the game! Want to try again?", "Game Completed", JOptionPane.YES_NO_OPTION);
